@@ -1,0 +1,3 @@
+
+- configure ssl with database
+- start frontend 
