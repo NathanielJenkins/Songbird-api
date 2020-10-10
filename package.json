@@ -24,6 +24,7 @@
 	"homepage": "https://github.com/NathanielJenkins/JoFi#readme",
 	"dependencies": {
 		"@hapi/joi": "^15.0.2",
+		"aws-sdk": "^2.768.0",
 		"babel-cli": "^6.26.0",
 		"babel-preset-es2015": "^6.24.1",
 		"bcryptjs": "^2.4.3",
@@ -37,6 +38,7 @@
 		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^5.7.5",
 		"multer": "^1.4.2",
+		"multer-s3": "^2.9.0",
 		"mysql": "^2.17.1",
 		"nodemailer": "^6.2.1",
 		"passport": "^0.4.0",

@@ -13,7 +13,7 @@ module.exports = {
 
 		// specify the user is not verified (for email verification)
 		user_data.isverified = false;
-
+		
 		const UserModel = schemas.User;
 
 		// check if there is a user with the email if there is no user, create them
@@ -80,4 +80,6 @@ module.exports = {
 			}
 		);
 	},
+
+	
 };

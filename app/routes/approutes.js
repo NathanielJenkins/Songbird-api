@@ -8,20 +8,17 @@ router.use(cors());
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 
-const multer = require("multer");
-
 //authentication related modules
 const passportConf = require("../tools/passport");
 const passport = require("passport");
 const { validateBody, schemas } = require("../tools/validate");
 
-//image upload
-const upload = multer({ dest: "uploads/" });
-
 //controllers
 const user_controller = require("../controllers/users");
 const random_controller = require("../controllers/random");
 const email_controller = require("../controllers/email");
+const upload_controller = require("../controllers/upload");
+const profile_controller = require("../controllers/profile");
 
 /**
  * Test route
@@ -52,7 +49,7 @@ router.post(
 	validateBody(schemas.authSchema),
 	random_controller.hash_pass,
 	user_controller.register,
-	email_controller.register_email,
+	// email_controller.register_email,
 	(req, res) => {
 		return res.status(200).send({ message: "Please verify your email" });
 	}
@@ -121,18 +118,51 @@ router.patch(
 router.post(
 	"/upload",
 	passport.authenticate("jwt", { session: false }),
-	upload.single("fileData"),
+	upload_controller.uploadImageS3,
+	upload_controller.uploadImageDB,
 	(req, res) => {
-		console.log("file", req.file);
-		console.log("body", req.body);
-		return res.status(200).send("Successfully uploaded image");
+		return res
+			.status(200)
+			.send({ success: true, message: "Successfully uploaded image" });
 	}
 );
 
+router.post(
+	"/generate_default_profile",
+	passport.authenticate("jwt", { session: false }),
+	profile_controller.generateDefaultUserProfile,
+	(req, res) => {
+		return res.status(200).send({
+			success: true,
+			message: "Successfully created a default user profile",
+		});
+	}
+);
+router.get("/test_aws", (req, res) => {
+	console.log("inside of testing aws");
+	s3.getObject({});
+	return res.status(200).send("success");
+});
+
 router.get(
-	"/get_header_photo",
-	passport.authenticate("jwt", { session: false })
+	"/get_profile",
+	passport.authenticate("jwt", { session: false }),
+	profile_controller.getProfile,
+	(req, res) => {
+		return res.status(200).send({ success: true, profile: req.body.profile });
+	}
 );
 
+router.post(
+	"/update_profile",
+	passport.authenticate("jwt", { session: false }),
+	profile_controller.updateProfile,
+	(req, res) => {
+		return res.status(200).send({
+			success: true,
+			message: "Successfully updated user profile",
+		});
+	}
+);
 //export the router
 module.exports = router;
